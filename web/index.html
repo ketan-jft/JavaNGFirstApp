@@ -1,10 +1,56 @@
-<!doctype html>
 <html>
-<script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
-<!--<script src = "angular.min.js"></script>-->
-<script src="ng.js">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+<script type="text/javascript">
+  app = angular.module('app',[]);
+  app.controller('MyCtrl',function($scope,$http) {
+     refreshData();
+     $scope.addData = function() {
+       $http.post("crudEmp?empCode=" + $scope.empCode + "&empName=" + $scope.empName + "&dmlType=Ins")
+        .success(function(response) {
+//	     $scope.empArr.push([{"EMP_CODE":$scope.empCode,"EMP_NAME":$scope.empName}]);
+             refreshData();
+        });
+      }
+
+     $scope.updateData = function() {
+       $http.post("crudEmp?empCode=" + $scope.empCode + "&empName=" + $scope.empName + "&dmlType=Upd")
+        .success(function(response) {
+           refreshData();
+        });
+     }
+
+     $scope.deleteData = function(curData) {
+        $http.post("crudEmp?empCode=" + curData.emp_code + "&dmlType=Del")
+        .success(function(response) {
+//	       	$scope.empArr.splice($scope.empArr.indexOf(curData),1);
+            refreshData();
+        });
+     }
+     
+     $scope.copyData = function(emp){
+         $scope.empCode = emp.emp_code;
+         $scope.empName = emp.emp_name;
+     }
+     
+     function clearForm(){
+         $scope.empCode="";
+         $scope.empName="";
+     }
+     
+     function refreshData() {
+       $http.get("getEmp")
+       .success(function(response) {
+            $scope.empArr = response;
+            clearForm();
+        })
+       .error(function(response) {
+   	     $scope.empArr={};
+       });
+     }
+
+  });
 </script>
-  <body ng-app="app">
+<body ng-app="app">
     <div ng-controller="MyCtrl">
         <h3>AngularJS with Java</h3><hr><br>
         <input type="text" name="empCode" placeholder="Enter Employee Code" ng-model="empCode" value="" />
@@ -15,7 +61,7 @@
         <p><input type="search" placeholder="search..." ng-model="search">  <a href="http://localhost:8084/Test/getEmp">View Data in JSON format</a> </p>
         <table border=1>
             <tr><th>Emp Code</th><th>Emp Name</th><th colspan="2">Action</th>
-            <tr ng-repeat="emp in empArr | orderBy:'emp.emp_code' | filter:search">
+            <tr ng-repeat="emp in empArr | orderBy:'zemp.emp_code' | filter:search">
                 <td>{{emp.emp_code}}</td><td>{{emp.emp_name}}</td><td><a href="" ng-click="copyData(emp)">Edit</a></td><td><a href="" ng-click="deleteData(emp)">Remove</a></td> 
             </tr>
         </table>
