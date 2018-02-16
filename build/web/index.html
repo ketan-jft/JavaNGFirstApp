@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
+<!--<script src = "angular.min.js"></script>-->
+<script src="ng.js">
+</script>
+  <body ng-app="app">
+    <div ng-controller="MyCtrl">
+        <h3>AngularJS with Java</h3><hr><br>
+        <input type="text" name="empCode" placeholder="Enter Employee Code" ng-model="empCode" value="" />
+        <input type="text" name="empName" placeholder="Enter Employee Name"  ng-model="empName" value="" /><br/><br/>
+        <input type="button" value="Add" ng-click="addData()" />
+        <input type="button" value="Update" ng-click="updateData()" /><br/><br/><br/>
+        <hr>
+        <p><input type="search" placeholder="search..." ng-model="search">  <a href="http://localhost:8084/Test/getEmp">View Data in JSON format</a> </p>
+        <table border=1>
+            <tr><th>Emp Code</th><th>Emp Name</th><th colspan="2">Action</th>
+            <tr ng-repeat="emp in empArr | orderBy:'emp.emp_code' | filter:search">
+                <td>{{emp.emp_code}}</td><td>{{emp.emp_name}}</td><td><a href="" ng-click="copyData(emp)">Edit</a></td><td><a href="" ng-click="deleteData(emp)">Remove</a></td> 
+            </tr>
+        </table>
+        <br>
+        <hr>
+        <select name="eid" ng-model="eid">
+            <option ng-repeat="x in empArr" value="{{x.emp_code}}">{{x.emp_name}}</option>
+        </select>
+        <p>You selected emp id : {{eid}}</p>
+    </div>
+    <br>
+  </body>
+</html>
